@@ -23,9 +23,40 @@ import org.springframework.web.bind.annotation.*;
 public class PatientController {
 
     private final PatientService patientService;
+    private final com.healthcare.system.service.DoctorDiscoveryService doctorDiscoveryService;
 
-    public PatientController(PatientService patientService) {
+    public PatientController(PatientService patientService, com.healthcare.system.service.DoctorDiscoveryService doctorDiscoveryService) {
         this.patientService = patientService;
+        this.doctorDiscoveryService = doctorDiscoveryService;
+    }
+
+    @GetMapping("/doctors")
+    @Operation(summary = "Search and filter doctors by name, specialization, or department")
+    public ResponseEntity<ApiResponse<org.springframework.data.domain.Page<com.healthcare.system.dto.doctor.DoctorResponse>>> getDoctors(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String specialization,
+            @RequestParam(required = false) String department,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Page<com.healthcare.system.dto.doctor.DoctorResponse> doctors = 
+            doctorDiscoveryService.searchDoctors(search, specialization, department, org.springframework.data.domain.PageRequest.of(page, size));
+        return ResponseEntity.ok(ApiResponse.success("Doctors retrieved successfully", doctors));
+    }
+
+    @GetMapping("/doctors/{id}")
+    @Operation(summary = "Get detailed profile of a specific doctor")
+    public ResponseEntity<ApiResponse<com.healthcare.system.dto.doctor.DoctorResponse>> getDoctorById(@PathVariable Long id) {
+        com.healthcare.system.dto.doctor.DoctorResponse doctor = doctorDiscoveryService.getDoctorById(id);
+        return ResponseEntity.ok(ApiResponse.success("Doctor details retrieved successfully", doctor));
+    }
+
+    @GetMapping("/doctors/{id}/available-slots")
+    @Operation(summary = "Retrieve available appointment slots for a doctor on a specific date")
+    public ResponseEntity<ApiResponse<java.util.List<com.healthcare.system.dto.doctor.TimeSlotResponse>>> getAvailableSlots(
+            @PathVariable Long id,
+            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate date) {
+        java.util.List<com.healthcare.system.dto.doctor.TimeSlotResponse> slots = doctorDiscoveryService.getAvailableSlots(id, date);
+        return ResponseEntity.ok(ApiResponse.success("Available slots retrieved successfully", slots));
     }
 
     @GetMapping("/profile")
