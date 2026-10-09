@@ -24,10 +24,27 @@ public class PatientController {
 
     private final PatientService patientService;
     private final com.healthcare.system.service.DoctorDiscoveryService doctorDiscoveryService;
+    private final com.healthcare.system.service.AppointmentService appointmentService;
 
-    public PatientController(PatientService patientService, com.healthcare.system.service.DoctorDiscoveryService doctorDiscoveryService) {
+    public PatientController(
+        PatientService patientService,
+        com.healthcare.system.service.DoctorDiscoveryService doctorDiscoveryService,
+        com.healthcare.system.service.AppointmentService appointmentService
+    ) {
         this.patientService = patientService;
         this.doctorDiscoveryService = doctorDiscoveryService;
+        this.appointmentService = appointmentService;
+    }
+
+    @PostMapping("/appointments")
+    @Operation(summary = "Book a new doctor appointment slot")
+    public ResponseEntity<ApiResponse<com.healthcare.system.dto.appointment.AppointmentResponse>> bookAppointment(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @Valid @RequestBody com.healthcare.system.dto.appointment.AppointmentBookingRequest request) {
+        com.healthcare.system.dto.appointment.AppointmentResponse response = 
+            appointmentService.bookAppointment(userPrincipal.getId(), request);
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED)
+            .body(ApiResponse.success("Appointment booked successfully", response));
     }
 
     @GetMapping("/doctors")
