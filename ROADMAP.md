@@ -700,7 +700,7 @@ To ensure strict traceability and maintainable git history:
 | :---: | :---: | :--- | :---: | :--- |
 | **1** | **1.1** | Project Skeleton & Build Automation | `[x] Completed` | `feat(phase-1.1): ...` |
 | **1** | **1.2** | Relational Database Modeling & Migration | `[x] Completed` | `feat(phase-1.2): ...` |
-| **1** | **1.3** | JPA Entities & Repository Layer | `[ ] Pending` | `feat(phase-1.3): ...` |
+| **1** | **1.3** | JPA Entities & Repository Layer | `[x] Completed` | `feat(phase-1.3): ...` |
 | **1** | **1.4** | Security Architecture, JWT & RBAC | `[ ] Pending` | `feat(phase-1.4): ...` |
 | **1** | **1.5** | Unified API Contract, DTOs & Exceptions | `[ ] Pending` | `feat(phase-1.5): ...` |
 | **2** | **2.1** | Patient Profile Management & Security | `[ ] Pending` | `feat(phase-2.1): ...` |
