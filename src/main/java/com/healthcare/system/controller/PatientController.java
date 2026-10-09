@@ -25,15 +25,49 @@ public class PatientController {
     private final PatientService patientService;
     private final com.healthcare.system.service.DoctorDiscoveryService doctorDiscoveryService;
     private final com.healthcare.system.service.AppointmentService appointmentService;
+    private final com.healthcare.system.service.MedicalRecordService medicalRecordService;
 
     public PatientController(
         PatientService patientService,
         com.healthcare.system.service.DoctorDiscoveryService doctorDiscoveryService,
-        com.healthcare.system.service.AppointmentService appointmentService
+        com.healthcare.system.service.AppointmentService appointmentService,
+        com.healthcare.system.service.MedicalRecordService medicalRecordService
     ) {
         this.patientService = patientService;
         this.doctorDiscoveryService = doctorDiscoveryService;
         this.appointmentService = appointmentService;
+        this.medicalRecordService = medicalRecordService;
+    }
+
+    @GetMapping("/medical-records")
+    @Operation(summary = "Get paginated history of personal medical records, diagnoses, and prescriptions")
+    public ResponseEntity<ApiResponse<org.springframework.data.domain.Page<com.healthcare.system.dto.medical.MedicalRecordResponse>>> getMedicalRecords(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Page<com.healthcare.system.dto.medical.MedicalRecordResponse> records = 
+            medicalRecordService.getPatientMedicalRecords(userPrincipal.getId(), org.springframework.data.domain.PageRequest.of(page, size));
+        return ResponseEntity.ok(ApiResponse.success("Medical records retrieved successfully", records));
+    }
+
+    @GetMapping("/medical-records/{id}")
+    @Operation(summary = "Get specific medical record details by record ID")
+    public ResponseEntity<ApiResponse<com.healthcare.system.dto.medical.MedicalRecordResponse>> getMedicalRecordById(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long id) {
+        com.healthcare.system.dto.medical.MedicalRecordResponse record = 
+            medicalRecordService.getMedicalRecordByIdForPatient(userPrincipal.getId(), id);
+        return ResponseEntity.ok(ApiResponse.success("Medical record retrieved successfully", record));
+    }
+
+    @GetMapping("/medical-records/appointment/{appointmentId}")
+    @Operation(summary = "Get medical record generated for a specific appointment")
+    public ResponseEntity<ApiResponse<com.healthcare.system.dto.medical.MedicalRecordResponse>> getMedicalRecordByAppointment(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long appointmentId) {
+        com.healthcare.system.dto.medical.MedicalRecordResponse record = 
+            medicalRecordService.getMedicalRecordByAppointmentForPatient(userPrincipal.getId(), appointmentId);
+        return ResponseEntity.ok(ApiResponse.success("Medical record retrieved successfully", record));
     }
 
     @PostMapping("/appointments")
