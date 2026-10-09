@@ -706,7 +706,7 @@ To ensure strict traceability and maintainable git history:
 | **2** | **2.1** | Patient Profile Management & Security | `[x] Completed` | `feat(phase-2.1): ...` |
 | **2** | **2.2** | Doctor Discovery & Availability Directory | `[x] Completed` | `feat(phase-2.2): ...` |
 | **2** | **2.3** | Appointment Booking Engine (Conflict Safe) | `[x] Completed` | `feat(phase-2.3): ...` |
-| **2** | **2.4** | Patient Appointment History & Actions | `[ ] Pending` | `feat(phase-2.4): ...` |
+| **2** | **2.4** | Patient Appointment History & Actions | `[x] Completed` | `feat(phase-2.4): ...` |
 | **2** | **2.5** | Patient Medical History & Records Portal | `[ ] Pending` | `feat(phase-2.5): ...` |
 | **2** | **2.6** | Patient Feedback & Doctor Rating System | `[ ] Pending` | `feat(phase-2.6): ...` |
 | **3** | **3.1** | Doctor Schedule & Availability Setup | `[ ] Pending` | `feat(phase-3.1): ...` |

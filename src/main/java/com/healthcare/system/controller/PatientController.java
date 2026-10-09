@@ -47,6 +47,42 @@ public class PatientController {
             .body(ApiResponse.success("Appointment booked successfully", response));
     }
 
+    @GetMapping("/appointments")
+    @Operation(summary = "Get paginated appointment history with optional status and timeframe filters")
+    public ResponseEntity<ApiResponse<org.springframework.data.domain.Page<com.healthcare.system.dto.appointment.AppointmentResponse>>> getAppointments(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam(required = false) com.healthcare.system.entity.enums.AppointmentStatus status,
+            @RequestParam(required = false) String timeframe,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Page<com.healthcare.system.dto.appointment.AppointmentResponse> appointments = 
+            appointmentService.getPatientAppointments(userPrincipal.getId(), status, timeframe, org.springframework.data.domain.PageRequest.of(page, size));
+        return ResponseEntity.ok(ApiResponse.success("Appointments retrieved successfully", appointments));
+    }
+
+    @PutMapping("/appointments/{id}/cancel")
+    @Operation(summary = "Cancel an existing upcoming appointment")
+    public ResponseEntity<ApiResponse<com.healthcare.system.dto.appointment.AppointmentResponse>> cancelAppointment(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long id,
+            @RequestBody(required = false) com.healthcare.system.dto.appointment.AppointmentCancelRequest request) {
+        String reason = request != null ? request.getReason() : null;
+        com.healthcare.system.dto.appointment.AppointmentResponse response = 
+            appointmentService.cancelAppointmentByPatient(userPrincipal.getId(), id, reason);
+        return ResponseEntity.ok(ApiResponse.success("Appointment cancelled successfully", response));
+    }
+
+    @PutMapping("/appointments/{id}/reschedule")
+    @Operation(summary = "Reschedule an appointment to a new date and time slot")
+    public ResponseEntity<ApiResponse<com.healthcare.system.dto.appointment.AppointmentResponse>> rescheduleAppointment(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long id,
+            @Valid @RequestBody com.healthcare.system.dto.appointment.AppointmentRescheduleRequest request) {
+        com.healthcare.system.dto.appointment.AppointmentResponse response = 
+            appointmentService.rescheduleAppointmentByPatient(userPrincipal.getId(), id, request.getNewDate(), request.getNewStartTime());
+        return ResponseEntity.ok(ApiResponse.success("Appointment rescheduled successfully", response));
+    }
+
     @GetMapping("/doctors")
     @Operation(summary = "Search and filter doctors by name, specialization, or department")
     public ResponseEntity<ApiResponse<org.springframework.data.domain.Page<com.healthcare.system.dto.doctor.DoctorResponse>>> getDoctors(
