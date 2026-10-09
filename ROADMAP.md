@@ -698,7 +698,7 @@ To ensure strict traceability and maintainable git history:
 
 | Phase | Sub-Phase | Title | Status | Commit Reference |
 | :---: | :---: | :--- | :---: | :--- |
-| **1** | **1.1** | Project Skeleton & Build Automation | `[ ] Pending` | `feat(phase-1.1): ...` |
+| **1** | **1.1** | Project Skeleton & Build Automation | `[x] Completed` | `feat(phase-1.1): ...` |
 | **1** | **1.2** | Relational Database Modeling & Migration | `[ ] Pending` | `feat(phase-1.2): ...` |
 | **1** | **1.3** | JPA Entities & Repository Layer | `[ ] Pending` | `feat(phase-1.3): ...` |
 | **1** | **1.4** | Security Architecture, JWT & RBAC | `[ ] Pending` | `feat(phase-1.4): ...` |

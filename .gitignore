@@ -34,6 +34,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+apache-maven*/
 
 # IDE specific files
 .idea/
