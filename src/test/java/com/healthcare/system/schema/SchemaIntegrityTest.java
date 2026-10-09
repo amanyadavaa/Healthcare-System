@@ -51,13 +51,13 @@ class SchemaIntegrityTest {
     @DisplayName("Unique Constraint: Enforces unique email constraint on users table")
     void shouldEnforceUniqueEmailConstraint() {
         jdbcTemplate.update(
-            "INSERT INTO users (email, password, first_name, last_name, role, status) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO users (email, password, first_name, last_name, role, status, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
             "unique.test@example.com", "hash123", "Jane", "Doe", "ROLE_PATIENT", "ACTIVE"
         );
 
         assertThatThrownBy(() ->
             jdbcTemplate.update(
-                "INSERT INTO users (email, password, first_name, last_name, role, status) VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO users (email, password, first_name, last_name, role, status, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
                 "unique.test@example.com", "hash456", "Another", "Doe", "ROLE_PATIENT", "ACTIVE"
             )
         ).isInstanceOf(DataIntegrityViolationException.class);
